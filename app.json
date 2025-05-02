@@ -2,6 +2,9 @@
   "expo": {
     "name": "CleanSlate",
     "slug": "CleanSlate",
-    "version": "1.0.0"
+    "scheme": "cleanslate",
+    "version": "1.0.0",
+    "newArchEnabled": true,
+    "plugins": ["expo-router"]
   }
 }
