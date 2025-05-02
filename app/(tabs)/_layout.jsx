@@ -1,12 +1,13 @@
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, View, Platform } from "react-native";
+import colors from "../../constants/colors";
 
 function CustomTabBarButton({ children, onPress }) {
   return (
     <Pressable
       android_ripple={{
-        color: "rgba(0,0,0,.1)", // subtle ripple
+        color: colors.tertiaryAccent, // subtle ripple
         radius: 50,
         borderless: false,
         foreground: false,
@@ -31,6 +32,7 @@ export default function TabsLayout() {
       screenOptions={({ route }) => ({
         tabBarButton: (props) => <CustomTabBarButton {...props} />,
 
+        // Icons
         tabBarIcon: ({ color, size, focused }) => {
           let iconName;
 
@@ -45,10 +47,23 @@ export default function TabsLayout() {
           return <Ionicons name={iconName} size={size} color={color} />;
         },
 
-        tabBarActiveTintColor: "black",
-        tabBarInactiveTintColor: "black",
+        // Tab bar styling
+        tabBarActiveTintColor: colors.secondaryText,
+        tabBarInactiveTintColor: colors.secondaryText,
         tabBarStyle: {
-          height: 55
+          height: 55,
+          backgroundColor: colors.secondary
+        },
+
+        // Header Styling
+        headerStyle: {
+          backgroundColor: colors.primary,
+          elevation: 0,
+          shadowOpacity: 0
+        },
+        headerTintColor: colors.primaryText,
+        headerTitleStyle: {
+          fontWeight: "bold"
         }
       })}
     >
