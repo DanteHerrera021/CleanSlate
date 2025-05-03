@@ -1,10 +1,10 @@
 import { Text } from "react-native";
-import PageContainer from "../../components/PageContainer";
+import PageContainer from "../components/PageContainer";
 
 export default function AboutScreen() {
   return (
     <PageContainer>
-      <Text>Goals Page</Text>
+      <Text>Add Goal Page</Text>
     </PageContainer>
   );
 }
