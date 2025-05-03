@@ -3,6 +3,7 @@
     "name": "CleanSlate",
     "slug": "CleanSlate",
     "scheme": "cleanslate",
+    "icon": "./assets/AppIcon.png",
     "version": "1.0.0",
     "newArchEnabled": true,
     "plugins": ["expo-router"]

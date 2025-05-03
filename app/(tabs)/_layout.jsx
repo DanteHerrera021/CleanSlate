@@ -1,6 +1,6 @@
-import { Tabs } from "expo-router";
+import { Tabs, Link } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { Pressable, View, Platform } from "react-native";
+import { Pressable, Image, View } from "react-native";
 import colors from "../../constants/colors";
 
 function CustomTabBarButton({ children, onPress }) {
@@ -30,6 +30,19 @@ export default function TabsLayout() {
     <Tabs
       initialRouteName="index"
       screenOptions={({ route }) => ({
+        headerTitle: () => (
+          <Link href={"/"}>
+            <Image
+              source={require("../../assets/CleanSlate TypefaceColor.png")}
+              style={{
+                height: 40,
+                width: 200,
+                resizeMode: "contain"
+              }}
+            />
+          </Link>
+        ),
+
         tabBarButton: (props) => <CustomTabBarButton {...props} />,
 
         // Icons
