@@ -1,5 +1,3 @@
-// constants/colors.js
-
 const colors = {
   // Neutral
   white: "#FFFFFF",

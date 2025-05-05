@@ -70,11 +70,8 @@ export default function TabsLayout() {
 
         // Header Styling
         headerStyle: {
-          backgroundColor: colors.primary,
-          elevation: 0,
-          shadowOpacity: 0
+          backgroundColor: colors.secondary
         },
-        headerTintColor: colors.primaryText,
         headerTitleStyle: {
           fontWeight: "bold"
         }

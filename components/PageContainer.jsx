@@ -1,15 +1,23 @@
-// components/PageContainer.jsx
 import { View, StyleSheet } from "react-native";
-import colors from "../constants/colors";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { globalStyles } from "../constants/styles";
 
 export default function PageContainer({ children }) {
-  return <View style={styles.container}>{children}</View>;
-}
+  const insets = useSafeAreaInsets();
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.primary,
-    padding: 16
-  }
-});
+  return (
+    <View
+      style={[
+        globalStyles.pageContainer,
+        {
+          paddingTop: insets.top + 16,
+          paddingBottom: insets.bottom,
+          paddingLeft: insets.left + 16,
+          paddingRight: insets.right + 16
+        }
+      ]}
+    >
+      {children}
+    </View>
+  );
+}
