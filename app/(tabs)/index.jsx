@@ -20,6 +20,10 @@ export default function HomeScreen() {
     <PageContainer>
       <View
         style={{
+          paddingHorizontal: 16,
+          backgroundColor: colors.secondary,
+          paddingTop: 16,
+          paddingBottom: 8,
           flexDirection: "row",
           justifyContent: "space-between",
           alignItems: "center",
@@ -49,6 +53,11 @@ export default function HomeScreen() {
       {/* Goal List */}
 
       <FlatList
+        style={{
+          paddingHorizontal: 16,
+          flexGrow: 0,
+          height: "50%"
+        }}
         data={goals}
         keyExtractor={(item) => item.id}
         renderItem={({ item, index }) => (
@@ -57,8 +66,52 @@ export default function HomeScreen() {
           </View>
         )}
       />
-
       {/* Goal Completed List */}
+      <View
+        style={{
+          paddingHorizontal: 16,
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          paddingVertical: 8,
+          shadowColor: colors.secondary,
+          shadowOffset: { width: 0, height: 0 },
+          shadowOpacity: 0.2,
+          shadowRadius: 10,
+          elevation: 20,
+          backgroundColor: colors.secondary
+        }}
+      >
+        <Pressable
+          style={{
+            flexDirection: "row",
+            alignItems: "center"
+          }}
+        >
+          <Text style={globalStyles.titleText}>Completed Goals </Text>
+          <Ionicons
+            name="arrow-forward"
+            size={20}
+            style={{ fontWeight: "bold" }}
+            color={colors.primaryText}
+          ></Ionicons>
+        </Pressable>
+      </View>
+
+      <FlatList
+        style={{
+          paddingHorizontal: 16,
+          flexGrow: 0,
+          height: "50%"
+        }}
+        data={goals}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item, index }) => (
+          <View style={index !== goals.length - 1 && stylesheet.notLastItem}>
+            <GoalTab goal={item}></GoalTab>
+          </View>
+        )}
+      />
     </PageContainer>
   );
 }

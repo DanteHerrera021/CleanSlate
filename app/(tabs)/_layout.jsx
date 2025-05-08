@@ -7,11 +7,11 @@ function CustomTabBarButton({ children, onPress }) {
   return (
     <Pressable
       android_ripple={{
-        color: colors.tertiaryAccent, // subtle ripple
+        color: colors.tertiaryAccent,
         radius: 50,
         borderless: false,
         foreground: false,
-        centered: true // 👈 force ripple to start from center
+        centered: true
       }}
       onPress={onPress}
       style={{
@@ -70,7 +70,9 @@ export default function TabsLayout() {
 
         // Header Styling
         headerStyle: {
-          backgroundColor: colors.secondary
+          backgroundColor: colors.secondary,
+          elevation: 0,
+          shadowOpacity: 0
         },
         headerTitleStyle: {
           fontWeight: "bold"

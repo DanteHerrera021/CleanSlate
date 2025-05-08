@@ -5,6 +5,7 @@ export default function Goal(name, description, difficulty) {
     this.description = description;
     this.difficulty = difficulty;
     this.progress = 0;
+    this.isSaved = false;
     this.changeProgress = function (newProgress) {
         this.progress = newProgress;
     }
