@@ -1,12 +1,32 @@
-export default function Goal(name, description, difficulty) {
-    this.id = Math.floor(Math.random() * 1_000_000).toString();
-
+export default class Goal {
+  constructor(name, description, difficulty, id = null) {
+    this.id = id ?? Math.floor(Math.random() * 1_000_000).toString();
     this.name = name;
     this.description = description;
     this.difficulty = difficulty;
     this.progress = 0;
     this.isSaved = false;
-    this.changeProgress = function (newProgress) {
-        this.progress = newProgress;
-    }
+  }
+
+  changeProgress(newProgress) {
+    this.progress = newProgress;
+  }
+
+  toJSON() {
+    return {
+      id: this.id,
+      name: this.name,
+      description: this.description,
+      difficulty: this.difficulty,
+      progress: this.progress,
+      isSaved: this.isSaved,
+    };
+  }
+
+  static fromJSON(data) {
+    const goal = new Goal(data.name, data.description, data.difficulty, data.id);
+    goal.progress = data.progress ?? 0;
+    goal.isSaved = data.isSaved ?? false;
+    return goal;
+  }
 }

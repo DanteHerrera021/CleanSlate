@@ -1,5 +1,4 @@
 import { View, Text } from "react-native";
-import Goal from "./../models/goal";
 import { globalStyles } from "../constants/styles";
 import colors from "../constants/colors";
 import CircularProgress from "react-native-circular-progress-indicator";
@@ -9,8 +8,6 @@ import { Link } from "expo-router";
 export default function GoalTab({ goal }) {
   let goalScale = ["easy", "medium", "hard"];
   let goalColor = goalScale[goal.difficulty - 1];
-
-  goal.changeProgress(Math.floor(Math.random() * 101));
 
   return (
     <Link href={"/editGoal/" + goal.id}>

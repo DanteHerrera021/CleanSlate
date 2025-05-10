@@ -5,17 +5,38 @@ import colors from "../../constants/colors";
 import { globalStyles } from "../../constants/styles";
 import GoalTab from "./../../components/GoalTab";
 import Goal from "../../models/goal";
+import { loadGoals, saveGoals } from "../../utils/storage";
+import { useEffect, useState } from "react";
 
 export default function HomeScreen() {
-  const goals = [
-    new Goal("Goal 1", "desc", 1),
-    new Goal("Goal 2", "desc", 3),
-    new Goal("Goal 3", "desc", 2),
-    new Goal("Goal 4", "desc", 1),
-    new Goal("Goal 5", "desc", 1),
-    new Goal("Goal 6", "desc", 2),
-    new Goal("Goal 7", "desc", 3)
-  ];
+  // useEffect(() => {
+  //   const loadTestData = async () => {
+  //     const goals = [
+  //       new Goal("Goal 1", "desc", 1),
+  //       new Goal("Goal 2", "desc", 3),
+  //       new Goal("Goal 3", "desc", 2),
+  //       new Goal("Goal 4", "desc", 1),
+  //       new Goal("Goal 5", "desc", 1),
+  //       new Goal("Goal 6", "desc", 2),
+  //       new Goal("Goal 7", "desc", 3)
+  //     ];
+  //     await saveGoals(goals);
+  //   };
+
+  //   loadTestData();
+  // }, []);
+
+  const [goals, setGoals] = useState([]);
+
+  useEffect(() => {
+    const fetchGoals = async () => {
+      const loadedGoals = await loadGoals();
+      setGoals(loadedGoals);
+    };
+
+    fetchGoals();
+  }, []);
+
   return (
     <PageContainer>
       <View

@@ -14,5 +14,33 @@ export const globalStyles = StyleSheet.create({
     subHeaderText: {
         fontSize: 16,
         fontWeight: "bold"
+    },
+    label: {
+        fontSize: 14,
+        color: colors.secondaryAccent,
+        marginBottom: 4
+    },
+    input: {
+        backgroundColor: colors.secondary,
+        borderRadius: 12,
+        padding: 8,
+        paddingLeft: 8,
+        marginBottom: 16,
+        fontSize: 16
+    },
+    inputFocused: {
+        borderWidth: 1,
+        borderColor: colors.secondaryAccent
+    },
+    submitBtn: {
+        backgroundColor: '#007bff',
+        padding: 12,
+        borderRadius: 8,
+        alignItems: 'center',
+    },
+    submitBtnText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
     }
-});
+})

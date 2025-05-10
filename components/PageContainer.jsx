@@ -1,11 +1,12 @@
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Image } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { globalStyles } from "../constants/styles";
 import colors from "../constants/colors";
+import { Link } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function PageContainer({ children, showHeader, padding }) {
   const insets = useSafeAreaInsets();
-  console.log(showHeader);
 
   return (
     <View style={{ flex: 1 }}>
@@ -13,19 +14,35 @@ export default function PageContainer({ children, showHeader, padding }) {
         <View
           style={{
             backgroundColor: colors.secondary,
-            paddingVertical: 8,
+            paddingTop: 38,
+            paddingVertical: 16,
             paddingHorizontal: 16
           }}
         >
           <Link href={"/"}>
-            <Image
-              source={require("../assets/CleanSlate TypefaceColor.png")}
+            <View
               style={{
-                height: 40,
-                width: 200,
-                resizeMode: "contain"
+                flexDirection: "row",
+                alignItems: "center"
               }}
-            />
+            >
+              <Ionicons
+                name="arrow-back"
+                size={28}
+                color={"black"}
+                style={{
+                  paddingRight: 8
+                }}
+              ></Ionicons>
+              <Image
+                source={require("../assets/CleanSlate TypefaceColor.png")}
+                style={{
+                  height: 40,
+                  width: 200,
+                  resizeMode: "contain"
+                }}
+              />
+            </View>
           </Link>
         </View>
       )}
@@ -34,7 +51,7 @@ export default function PageContainer({ children, showHeader, padding }) {
           globalStyles.pageContainer,
           padding
             ? {
-                paddingTop: insets.top + 16,
+                paddingTop: insets.top,
                 paddingBottom: insets.bottom,
                 paddingLeft: insets.left + 16,
                 paddingRight: insets.right + 16
