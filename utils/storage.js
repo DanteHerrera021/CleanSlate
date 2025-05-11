@@ -5,12 +5,15 @@ const STORAGE_KEY = "goals";
 
 export const saveGoals = async (goalArray) => {
     try {
-        const json = JSON.stringify(goalArray.map((goal) => goal.toJSON()));
-        await AsyncStorage.setItem(STORAGE_KEY, json);
+        const clean = goalArray.map((goal) =>
+            goal.toJSON ? goal.toJSON() : Goal.fromJSON(goal).toJSON()
+        );
+        await AsyncStorage.setItem('goals', JSON.stringify(clean));
     } catch (e) {
         console.error('Error saving goals:', e);
     }
 };
+
 
 export const loadGoals = async () => {
     try {
@@ -58,4 +61,34 @@ export const syncGoal = async (goal) => {
 export const getGoalById = async (goalId) => {
     const current = await loadGoals();
     return current.find((goal) => goal.id === goalId) || null;
+};
+
+export const loadUncompletedGoals = async () => {
+    try {
+        const stored = await AsyncStorage.getItem('goals');
+        if (!stored) return [];
+
+        const parsed = JSON.parse(stored);
+        const allGoals = parsed.map((g) => Goal.fromJSON(g));
+
+        return allGoals.filter((goal) => goal.progress < 100);
+    } catch (e) {
+        console.error('Error loading uncompleted goals:', e);
+        return [];
+    }
+};
+
+export const loadCompletedGoals = async () => {
+    try {
+        const stored = await AsyncStorage.getItem('goals');
+        if (!stored) return [];
+
+        const parsed = JSON.parse(stored);
+        const allGoals = parsed.map((g) => Goal.fromJSON(g));
+
+        return allGoals.filter((goal) => goal.progress == 100);
+    } catch (e) {
+        console.error('Error loading uncompleted goals:', e);
+        return [];
+    }
 };

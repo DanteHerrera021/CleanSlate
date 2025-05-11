@@ -52,7 +52,6 @@ export default function PageContainer({ children, showHeader, padding }) {
           padding
             ? {
                 paddingTop: insets.top,
-                paddingBottom: insets.bottom,
                 paddingLeft: insets.left + 16,
                 paddingRight: insets.right + 16
               }

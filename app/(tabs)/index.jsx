@@ -5,33 +5,25 @@ import colors from "../../constants/colors";
 import { globalStyles } from "../../constants/styles";
 import GoalTab from "./../../components/GoalTab";
 import Goal from "../../models/goal";
-import { loadGoals, saveGoals } from "../../utils/storage";
+import {
+  loadCompletedGoals,
+  loadGoals,
+  loadUncompletedGoals,
+  saveGoals
+} from "../../utils/storage";
 import { useEffect, useState } from "react";
+import { Link } from "expo-router";
 
 export default function HomeScreen() {
-  // useEffect(() => {
-  //   const loadTestData = async () => {
-  //     const goals = [
-  //       new Goal("Goal 1", "desc", 1),
-  //       new Goal("Goal 2", "desc", 3),
-  //       new Goal("Goal 3", "desc", 2),
-  //       new Goal("Goal 4", "desc", 1),
-  //       new Goal("Goal 5", "desc", 1),
-  //       new Goal("Goal 6", "desc", 2),
-  //       new Goal("Goal 7", "desc", 3)
-  //     ];
-  //     await saveGoals(goals);
-  //   };
-
-  //   loadTestData();
-  // }, []);
-
-  const [goals, setGoals] = useState([]);
+  const [uncompletedGoals, setUncompletedGoals] = useState([]);
+  const [completedGoals, setCompletedGoals] = useState([]);
 
   useEffect(() => {
     const fetchGoals = async () => {
-      const loadedGoals = await loadGoals();
-      setGoals(loadedGoals);
+      const loadedUncompletedGoals = await loadUncompletedGoals();
+      const loadedCompletedGoals = await loadCompletedGoals();
+      setUncompletedGoals(loadedUncompletedGoals);
+      setCompletedGoals(loadedCompletedGoals);
     };
 
     fetchGoals();
@@ -47,11 +39,9 @@ export default function HomeScreen() {
           paddingBottom: 8,
           flexDirection: "row",
           justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "10"
+          alignItems: "center"
         }}
       >
-        {/* Tab slide up to show all goals? */}
         <Pressable
           style={{
             flexDirection: "row",
@@ -66,9 +56,9 @@ export default function HomeScreen() {
             color={colors.primaryText}
           ></Ionicons>
         </Pressable>
-        <Pressable style={{ padding: 2 }}>
+        <Link style={{ padding: 2 }} href={"/addGoal"}>
           <Ionicons name="add" size={30} color={colors.primaryText}></Ionicons>
-        </Pressable>
+        </Link>
       </View>
 
       {/* Goal List */}
@@ -77,12 +67,17 @@ export default function HomeScreen() {
         style={{
           paddingHorizontal: 16,
           flexGrow: 0,
-          height: "50%"
+          height: "50%",
+          paddingVertical: 16
         }}
-        data={goals}
+        data={uncompletedGoals}
         keyExtractor={(item) => item.id}
         renderItem={({ item, index }) => (
-          <View style={index !== goals.length - 1 && stylesheet.notLastItem}>
+          <View
+            style={
+              index !== uncompletedGoals.length - 1 && stylesheet.notLastItem
+            }
+          >
             <GoalTab goal={item}></GoalTab>
           </View>
         )}
@@ -123,12 +118,17 @@ export default function HomeScreen() {
         style={{
           paddingHorizontal: 16,
           flexGrow: 0,
-          height: "50%"
+          height: "50%",
+          paddingVertical: 16
         }}
-        data={goals}
+        data={completedGoals}
         keyExtractor={(item) => item.id}
         renderItem={({ item, index }) => (
-          <View style={index !== goals.length - 1 && stylesheet.notLastItem}>
+          <View
+            style={
+              index !== completedGoals.length - 1 && stylesheet.notLastItem
+            }
+          >
             <GoalTab goal={item}></GoalTab>
           </View>
         )}

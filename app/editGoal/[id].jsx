@@ -1,21 +1,19 @@
-// TODO: CREATE RADIO BUTTONS
-// TODO: CHANGE DEFAULT STYLING IN STYLES.JS
-// TODO: CREATE SUBMIT METHOD UTILIZING STORAGE.JS
-
-import { Button, Pressable, Text, TextInput, View } from "react-native";
+import { Pressable, Text, TextInput, View } from "react-native";
 import PageContainer from "../../components/PageContainer";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import Goal from "./../../models/goal";
 import { getGoalById, syncGoal } from "../../utils/storage";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { globalStyles } from "../../constants/styles";
 import colors from "../../constants/colors";
 import RadioCircle from "../../components/RadioCircle";
 import ProgressSlider from "../../components/ProgressSlider";
+import { Confetti } from "react-native-fast-confetti";
 
 export default function EditGoal() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
+  const [hasTriggered, setHasTriggered] = useState(false);
+  const confettiRef = useRef();
 
   const [focusedField, setFocusedField] = useState(false);
 
@@ -69,7 +67,6 @@ export default function EditGoal() {
 
   useEffect(() => {
     if (goal) {
-      console.log("Loaded goal:", goal);
       setGoalName(goal.name);
       setGoalDesc(goal.description);
       setGoalDifficulty(goal.difficulty);
@@ -77,8 +74,22 @@ export default function EditGoal() {
     }
   }, [goal]);
 
+  useEffect(() => {
+    if (!confettiRef.current) return;
+
+    if (goal?.progress === 100 && !hasTriggered) {
+      confettiRef.current?.resume?.();
+      setHasTriggered(true);
+    }
+
+    if (goal?.progress < 100 && hasTriggered) {
+      setHasTriggered(false);
+    }
+  }, [goal?.progress]);
+
   const submitGoal = async () => {
     try {
+      console.log(goalProgress);
       goal.name = goalName;
       goal.description = goalDesc;
       goal.difficulty = goalDifficulty;
@@ -197,6 +208,12 @@ export default function EditGoal() {
       <Pressable style={globalStyles.submitBtn} onPress={submitGoal}>
         <Text style={globalStyles.submitBtnText}>Save Goal</Text>
       </Pressable>
+      <Confetti
+        ref={confettiRef}
+        autoplay={false}
+        origin={{ x: 0, y: 0 }}
+        fallDuration={5000}
+      ></Confetti>
     </PageContainer>
   );
 }

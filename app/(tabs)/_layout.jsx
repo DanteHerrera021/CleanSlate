@@ -2,6 +2,7 @@ import { Tabs, Link } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable, Image, View } from "react-native";
 import colors from "../../constants/colors";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 function CustomTabBarButton({ children, onPress }) {
   return (
@@ -15,7 +16,7 @@ function CustomTabBarButton({ children, onPress }) {
       }}
       onPress={onPress}
       style={{
-        flex: 1,
+        height: "100%",
         alignItems: "center",
         justifyContent: "center"
       }}
@@ -26,6 +27,7 @@ function CustomTabBarButton({ children, onPress }) {
 }
 
 export default function TabsLayout() {
+  const insets = useSafeAreaInsets();
   return (
     <Tabs
       initialRouteName="index"
@@ -64,7 +66,7 @@ export default function TabsLayout() {
         tabBarActiveTintColor: colors.secondaryText,
         tabBarInactiveTintColor: colors.secondaryText,
         tabBarStyle: {
-          height: 55,
+          height: insets.bottom + 55,
           backgroundColor: colors.secondary
         },
 
