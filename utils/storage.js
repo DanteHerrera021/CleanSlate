@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Goal from "../models/goal";
+import SavedGoal from "../models/savedGoal";
 
 const STORAGE_KEY = "goals";
 
@@ -113,4 +114,43 @@ export const cleanBrokenGoals = async () => {
     );
 
     await AsyncStorage.setItem("goals", JSON.stringify(cleaned));
+};
+
+export const saveSavedGoals = async (goalArray) => {
+    try {
+        const clean = goalArray
+            .filter(SavedGoal.isValid)
+            .map((goal) =>
+                goal.toJSON ? goal.toJSON() : SavedGoal.fromJSON(goal).toJSON()
+            );
+        await AsyncStorage.setItem('savedGoals', JSON.stringify(clean));
+    } catch (e) {
+        console.error('Error saving goals:', e);
+    }
+};
+
+export const loadSavedGoals = async () => {
+    try {
+        const stored = await AsyncStorage.getItem('savedGoals');
+        if (!stored) return [];
+
+        const parsed = JSON.parse(stored);
+        const savedGoals = parsed.map((sg) => SavedGoal.fromJSON(sg));
+
+        return savedGoals;
+    } catch (e) {
+        console.error('Error loading saved goals:', e)
+        return [];
+    }
+}
+
+export const syncSavedGoal = async (goal) => {
+    const current = await loadSavedGoals();
+    const index = current.findIndex((g) => g.id === goal.id);
+    if (index >= 0) {
+        current[index] = goal;
+    } else {
+        current.push(goal);
+    }
+    await saveSavedGoals(current);
 };
