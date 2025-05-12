@@ -16,6 +16,7 @@ export default function GoalTab({ goal }) {
           borderColor: colors.secondaryAccent,
           borderWidth: 1,
           borderRadius: 10,
+          backgroundColor: colors.primary,
           padding: 10,
           flexDirection: "row",
           alignContent: "center",

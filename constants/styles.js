@@ -42,5 +42,8 @@ export const globalStyles = StyleSheet.create({
         color: '#fff',
         fontSize: 16,
         fontWeight: 'bold',
+    },
+    notLastItem: {
+        marginBottom: 10
     }
 })

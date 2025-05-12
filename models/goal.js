@@ -29,4 +29,15 @@ export default class Goal {
     goal.isSaved = data.isSaved ?? false;
     return goal;
   }
+
+  static isValid(goal) {
+    return (
+      goal &&
+      typeof goal.id === "string" &&
+      typeof goal.name === "string" &&
+      typeof goal.description === "string" &&
+      typeof goal.difficulty === "number" &&
+      typeof goal.progress === "number"
+    );
+  }
 }
