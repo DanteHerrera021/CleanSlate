@@ -16,7 +16,6 @@ export const saveGoals = async (goalArray) => {
     }
 };
 
-
 export const loadGoals = async () => {
     try {
         const stored = await AsyncStorage.getItem(STORAGE_KEY);
@@ -52,6 +51,12 @@ export const removeGoalById = async (goalId) => {
     await saveGoals(updated);
 };
 
+export const loadGoalById = async (goalId) => {
+    const goals = await loadGoals();
+    const goal = goals.filter((goal) => goal.id === goalId);
+    return goal[0]
+}
+
 export const syncGoal = async (goal) => {
     const current = await loadGoals();
     const index = current.findIndex((g) => g.id === goal.id);
@@ -68,7 +73,7 @@ export const getGoalById = async (goalId) => {
     return current.find((goal) => goal.id === goalId) || null;
 };
 
-export const loadUncompletedGoals = async () => {
+export const loadIncompleteGoals = async () => {
     try {
         const stored = await AsyncStorage.getItem('goals');
         if (!stored) return [];
@@ -78,7 +83,7 @@ export const loadUncompletedGoals = async () => {
 
         return allGoals.filter((goal) => goal.progress < 100);
     } catch (e) {
-        console.error('Error loading uncompleted goals:', e);
+        console.error('Error loading incomplete goals:', e);
         return [];
     }
 };
@@ -93,7 +98,7 @@ export const loadCompletedGoals = async () => {
 
         return allGoals.filter((goal) => goal.progress == 100);
     } catch (e) {
-        console.error('Error loading uncompleted goals:', e);
+        console.error('Error loading incomplete goals:', e);
         return [];
     }
 };

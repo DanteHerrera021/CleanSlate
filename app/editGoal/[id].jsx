@@ -1,7 +1,7 @@
 import { Pressable, Text, TextInput, View } from "react-native";
 import PageContainer from "../../components/PageContainer";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { getGoalById, syncGoal } from "../../utils/storage";
+import { getGoalById, removeGoalById, syncGoal } from "../../utils/storage";
 import { useEffect, useRef, useState } from "react";
 import { globalStyles } from "../../constants/styles";
 import colors from "../../constants/colors";
@@ -38,7 +38,7 @@ export default function EditGoal() {
       setTimeLeft(`${h}:${m}:${s}`);
     };
 
-    updateTime(); // initial call
+    updateTime();
     const interval = setInterval(updateTime, 1000);
 
     return () => clearInterval(interval);
@@ -89,18 +89,21 @@ export default function EditGoal() {
 
   const submitGoal = async () => {
     try {
-      console.log(goalProgress);
       goal.name = goalName;
       goal.description = goalDesc;
       goal.difficulty = goalDifficulty;
       goal.progress = goalProgress;
 
       await syncGoal(goal);
-      console.log("Goal saved!");
       router.replace("/");
     } catch (e) {
       console.error("Failed to save goal:", e);
     }
+  };
+
+  const deleteGoal = async () => {
+    await removeGoalById(id);
+    router.replace("/");
   };
 
   return (
@@ -205,8 +208,15 @@ export default function EditGoal() {
         )}
       </View>
 
-      <Pressable style={globalStyles.submitBtn} onPress={submitGoal}>
+      <Pressable
+        style={[globalStyles.submitBtn, { marginBottom: 16 }]}
+        onPress={submitGoal}
+      >
         <Text style={globalStyles.submitBtnText}>Save Goal</Text>
+      </Pressable>
+
+      <Pressable style={globalStyles.deleteBtn} onPress={deleteGoal}>
+        <Text style={globalStyles.deleteBtnText}>Delete Goal</Text>
       </Pressable>
       <Confetti
         ref={confettiRef}

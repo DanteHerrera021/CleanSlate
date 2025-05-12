@@ -43,6 +43,17 @@ export const globalStyles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     },
+    deleteBtn: {
+        backgroundColor: colors.danger,
+        padding: 12,
+        borderRadius: 8,
+        alignItems: 'center',
+    },
+    deleteBtnText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
     notLastItem: {
         marginBottom: 10
     }

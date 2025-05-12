@@ -5,7 +5,6 @@ export default class Goal {
     this.description = description;
     this.difficulty = difficulty;
     this.progress = progress ?? 0;
-    this.isSaved = false;
   }
 
   changeProgress(newProgress) {
@@ -18,15 +17,13 @@ export default class Goal {
       name: this.name,
       description: this.description,
       difficulty: this.difficulty,
-      progress: this.progress,
-      isSaved: this.isSaved,
+      progress: this.progress
     };
   }
 
   static fromJSON(data) {
     const goal = new Goal(data.name, data.description, data.difficulty, data.id);
     goal.progress = data.progress ?? 0;
-    goal.isSaved = data.isSaved ?? false;
     return goal;
   }
 

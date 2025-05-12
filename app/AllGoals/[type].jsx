@@ -4,19 +4,20 @@ import { SwipeListView } from "react-native-swipe-list-view";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import {
   loadCompletedGoals,
-  loadUncompletedGoals,
+  loadIncompleteGoals,
   removeGoalById
 } from "../../utils/storage";
 import PageContainer from "../../components/PageContainer";
 import GoalTab from "../../components/GoalTab";
 import colors from "../../constants/colors";
 import { globalStyles } from "../../constants/styles";
-import { Link } from "expo-router";
+import { Link, useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
 const windowWidth = Dimensions.get("window").width;
 
-export default function AllGoals({ type = "incomplete" }) {
+export default function AllGoals() {
+  const { type } = useLocalSearchParams();
   const insets = useSafeAreaInsets();
   const [goals, setGoals] = useState([]);
   const rowTranslateAnimatedValues = useRef({});
@@ -27,7 +28,7 @@ export default function AllGoals({ type = "incomplete" }) {
       const data =
         type.toLowerCase() === "complete"
           ? await loadCompletedGoals()
-          : await loadUncompletedGoals();
+          : await loadIncompleteGoals();
 
       const animatedMap = {};
       data.forEach((g) => {
@@ -57,7 +58,7 @@ export default function AllGoals({ type = "incomplete" }) {
         const updated =
           type.toLowerCase() === "complete"
             ? await loadCompletedGoals()
-            : await loadUncompletedGoals();
+            : await loadIncompleteGoals();
 
         setGoals(updated);
         animationIsRunning.current = false;
@@ -112,7 +113,9 @@ export default function AllGoals({ type = "incomplete" }) {
             alignItems: "center"
           }}
         >
-          <Text style={globalStyles.titleText}>Your Goals Today </Text>
+          <Text style={globalStyles.titleText}>
+            {type === "complete" ? "Completed Goals Today" : "Your Goals Today"}
+          </Text>
         </View>
         <Link style={{ padding: 2 }} href={"/addGoal"}>
           <Ionicons name="add" size={30} color={colors.primaryText}></Ionicons>

@@ -28,7 +28,6 @@ export default function AddGoal() {
       const goal = new Goal(goalName, goalDesc, goalDifficulty);
 
       await syncGoal(goal);
-      console.log("Goal saved!");
       router.replace("/");
     } catch (e) {
       console.error("Failed to save goal:", e);
