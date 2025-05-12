@@ -4,7 +4,7 @@ import SavedGoal from "../models/savedGoal";
 
 const STORAGE_KEY = "goals";
 
-export const saveGoals = async (goalArray) => {
+const saveGoals = async (goalArray) => {
     try {
         const clean = goalArray
             .filter(Goal.isValid)
@@ -116,7 +116,7 @@ export const cleanBrokenGoals = async () => {
     await AsyncStorage.setItem("goals", JSON.stringify(cleaned));
 };
 
-export const saveSavedGoals = async (goalArray) => {
+const saveSavedGoals = async (goalArray) => {
     try {
         const clean = goalArray
             .filter(SavedGoal.isValid)
@@ -153,4 +153,10 @@ export const syncSavedGoal = async (goal) => {
         current.push(goal);
     }
     await saveSavedGoals(current);
+};
+
+export const removeSavedGoalById = async (goalId) => {
+    const current = await loadSavedGoals();
+    const updated = current.filter((goal) => goal.id !== goalId);
+    await saveGoals(updated);
 };
