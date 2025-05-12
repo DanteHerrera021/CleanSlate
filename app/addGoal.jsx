@@ -98,7 +98,7 @@ export default function AddGoal() {
       </View>
 
       <Pressable style={globalStyles.submitBtn} onPress={submitGoal}>
-        <Text style={globalStyles.submitBtnText}>Save Goal</Text>
+        <Text style={globalStyles.submitBtnText}>Add Goal</Text>
       </Pressable>
     </PageContainer>
   );

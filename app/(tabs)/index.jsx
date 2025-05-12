@@ -1,27 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  Animated,
-  Dimensions,
-  Pressable,
-  StyleSheet,
-  Text,
-  View
-} from "react-native";
+import { Animated, StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { SwipeListView } from "react-native-swipe-list-view";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import PageContainer from "../../components/PageContainer";
-import GoalTab from "../../components/GoalTab";
 import colors from "../../constants/colors";
 import { globalStyles } from "../../constants/styles";
 import {
   cleanBrokenGoals,
   loadCompletedGoals,
-  loadGoalById,
   loadIncompleteGoals,
   removeGoalById
 } from "../../utils/storage";
 import { Link } from "expo-router";
+import SwipeToDelete from "../../components/SwipeToDelete";
 
 export default function HomeScreen() {
   const [incompleteGoals, setIncompleteGoals] = useState([]);
@@ -29,8 +19,6 @@ export default function HomeScreen() {
   const incompleteAnims = useRef({});
   const completedAnims = useRef({});
   const animating = useRef(false);
-  const insets = useSafeAreaInsets();
-  const windowWidth = Dimensions.get("window").width;
 
   useEffect(() => {
     cleanBrokenGoals();
@@ -84,37 +72,6 @@ export default function HomeScreen() {
       });
     }
   };
-
-  const onSwipeIncomplete = ({ key, value }) => {
-    if (value < -windowWidth) handleSwipe(key, "incomplete");
-  };
-
-  const onSwipeCompleted = ({ key, value }) => {
-    if (value < -windowWidth) handleSwipe(key, "completed");
-  };
-
-  const renderItem = (item, map) => {
-    const animatedStyle = {
-      height: map[item.id]?.interpolate({
-        inputRange: [0, 1],
-        outputRange: [0, 96]
-      }),
-      overflow: "hidden"
-    };
-
-    return (
-      <Animated.View style={animatedStyle}>
-        <GoalTab goal={item} />
-      </Animated.View>
-    );
-  };
-
-  const renderHiddenItem = () => (
-    <View style={styles.rowBack}>
-      <Ionicons name="trash-bin-outline" size={32} style={{ color: "white" }} />
-    </View>
-  );
-
   return (
     <PageContainer>
       <View style={{ height: "50%" }}>
@@ -133,19 +90,11 @@ export default function HomeScreen() {
           </Link>
         </View>
 
-        <SwipeListView
-          data={incompleteGoals}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => renderItem(item, incompleteAnims.current)}
-          renderHiddenItem={renderHiddenItem}
-          rightOpenValue={-windowWidth}
-          onSwipeValueChange={onSwipeIncomplete}
-          contentContainerStyle={{
-            paddingHorizontal: 16,
-            paddingTop: 16,
-            paddingBottom: insets.bottom + 16
-          }}
-          useNativeDriver={false}
+        <SwipeToDelete
+          goals={incompleteGoals}
+          animatedValues={incompleteAnims.current}
+          handleSwipe={handleSwipe}
+          type="incomplete"
         />
       </View>
 
@@ -162,20 +111,11 @@ export default function HomeScreen() {
           </Link>
         </View>
 
-        <SwipeListView
-          data={completedGoals}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => renderItem(item, completedAnims.current)}
-          renderHiddenItem={renderHiddenItem}
-          rightOpenValue={-windowWidth}
-          disableRightSwipe
-          onSwipeValueChange={onSwipeCompleted}
-          contentContainerStyle={{
-            paddingHorizontal: 16,
-            paddingTop: 16,
-            paddingBottom: insets.bottom + 16
-          }}
-          useNativeDriver={false}
+        <SwipeToDelete
+          goals={completedGoals}
+          animatedValues={completedAnims.current}
+          handleSwipe={handleSwipe}
+          type="completed"
         />
       </View>
     </PageContainer>
@@ -208,14 +148,5 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 20,
     backgroundColor: colors.secondary
-  },
-  rowBack: {
-    alignItems: "flex-end",
-    backgroundColor: colors.danger,
-    flex: 1,
-    justifyContent: "center",
-    paddingRight: 24,
-    marginBottom: 14,
-    borderRadius: 10
   }
 });

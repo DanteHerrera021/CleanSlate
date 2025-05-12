@@ -5,12 +5,14 @@ import CircularProgress from "react-native-circular-progress-indicator";
 import { Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
 
-export default function GoalTab({ goal }) {
+export default function GoalTab({ goal, editFolderName = "editGoal" }) {
   let goalScale = ["easy", "medium", "hard"];
   let goalColor = goalScale[goal.difficulty - 1];
 
+  const showProgress = editFolderName !== "EditSavedGoal";
+
   return (
-    <Link href={"/editGoal/" + goal.id}>
+    <Link href={`/${editFolderName}/${goal.id}`}>
       <View
         style={{
           borderColor: colors.secondaryAccent,
@@ -48,7 +50,7 @@ export default function GoalTab({ goal }) {
         <View
           style={{
             justifyContent: "center",
-            width: "50%"
+            width: showProgress ? "50%" : "75%"
           }}
         >
           <Text style={globalStyles.subHeaderText}>{goal.name}</Text>

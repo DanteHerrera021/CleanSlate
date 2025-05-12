@@ -54,6 +54,17 @@ export const globalStyles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     },
+    saveBtn: {
+        backgroundColor: colors.warning,
+        padding: 12,
+        borderRadius: 8,
+        alignItems: 'center',
+    },
+    saveBtnText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
     notLastItem: {
         marginBottom: 10
     }

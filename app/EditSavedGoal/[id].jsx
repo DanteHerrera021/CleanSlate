@@ -1,12 +1,7 @@
 import { Pressable, Text, TextInput, View } from "react-native";
 import PageContainer from "../../components/PageContainer";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import {
-  getGoalById,
-  removeGoalById,
-  syncGoal,
-  syncSavedGoal
-} from "../../utils/storage";
+import { getGoalById, removeGoalById, syncGoal } from "../../utils/storage";
 import { useEffect, useRef, useState } from "react";
 import { globalStyles } from "../../constants/styles";
 import colors from "../../constants/colors";
@@ -21,33 +16,6 @@ export default function EditGoal() {
   const confettiRef = useRef();
 
   const [focusedField, setFocusedField] = useState(false);
-
-  const [timeLeft, setTimeLeft] = useState("");
-
-  useEffect(() => {
-    const updateTime = () => {
-      const now = new Date();
-      const midnight = new Date();
-      midnight.setHours(24, 0, 0, 0);
-
-      const diff = midnight - now;
-
-      const hours = Math.floor(diff / (1000 * 60 * 60));
-      const minutes = Math.floor((diff / (1000 * 60)) % 60);
-      const seconds = Math.floor((diff / 1000) % 60);
-
-      const h = hours.toString().padStart(2, "0");
-      const m = minutes.toString().padStart(2, "0");
-      const s = seconds.toString().padStart(2, "0");
-
-      setTimeLeft(`${h}:${m}:${s}`);
-    };
-
-    updateTime();
-    const interval = setInterval(updateTime, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
 
   const [goal, setGoal] = useState(null);
 
@@ -100,7 +68,7 @@ export default function EditGoal() {
       goal.progress = goalProgress;
 
       await syncGoal(goal);
-      router.replace("/");
+      router.replace("/(tabs)/goals");
     } catch (e) {
       console.error("Failed to save goal:", e);
     }
@@ -108,12 +76,7 @@ export default function EditGoal() {
 
   const deleteGoal = async () => {
     await removeGoalById(id);
-    router.replace("/");
-  };
-
-  const saveGoal = async () => {
-    await syncSavedGoal(await getGoalById(id));
-    router.replace("/");
+    router.replace("/(tabs)/goals");
   };
 
   return (
@@ -126,31 +89,7 @@ export default function EditGoal() {
           marginBottom: 16
         }}
       >
-        <Text style={globalStyles.titleText}>Edit Goal</Text>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center"
-          }}
-        >
-          <Text
-            style={
-              (globalStyles.subHeaderText, { color: colors.secondaryAccent })
-            }
-          >
-            Time left -{" "}
-          </Text>
-          <Text
-            style={{
-              backgroundColor: colors.secondaryText,
-              color: colors.secondary,
-              padding: 4,
-              borderRadius: 5
-            }}
-          >
-            {timeLeft}
-          </Text>
-        </View>
+        <Text style={globalStyles.titleText}>Edit Saved Goal</Text>
       </View>
 
       <Text style={globalStyles.label}>Goal Name:</Text>
@@ -202,22 +141,6 @@ export default function EditGoal() {
         ))}
       </View>
 
-      <View
-        style={{
-          marginBottom: 16
-        }}
-      >
-        {goal && (
-          <ProgressSlider
-            progress={goal.progress}
-            onUpdate={(newProgress) => {
-              const updatedGoal = { ...goal, progress: newProgress };
-              setGoal(updatedGoal);
-            }}
-          />
-        )}
-      </View>
-
       <Pressable
         style={[globalStyles.submitBtn, { marginBottom: 16 }]}
         onPress={submitGoal}
@@ -225,15 +148,8 @@ export default function EditGoal() {
         <Text style={globalStyles.submitBtnText}>Change Goal</Text>
       </Pressable>
 
-      <Pressable
-        style={[globalStyles.deleteBtn, { marginBottom: 16 }]}
-        onPress={deleteGoal}
-      >
+      <Pressable style={globalStyles.deleteBtn} onPress={deleteGoal}>
         <Text style={globalStyles.deleteBtnText}>Delete Goal</Text>
-      </Pressable>
-
-      <Pressable style={globalStyles.saveBtn} onPress={saveGoal}>
-        <Text style={globalStyles.saveBtnText}>Add to Saved Goals</Text>
       </Pressable>
       <Confetti
         ref={confettiRef}
