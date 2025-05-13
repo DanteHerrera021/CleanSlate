@@ -65,6 +65,17 @@ export const globalStyles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold',
     },
+    addBackBtn: {
+        backgroundColor: colors.success,
+        padding: 12,
+        borderRadius: 8,
+        alignItems: 'center',
+    },
+    addBackBtnText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
     notLastItem: {
         marginBottom: 10
     }

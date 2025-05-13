@@ -1,13 +1,17 @@
 import { Pressable, Text, TextInput, View } from "react-native";
 import PageContainer from "../../components/PageContainer";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import { getGoalById, removeGoalById, syncGoal } from "../../utils/storage";
+import {
+  getSavedGoalById,
+  removeSavedGoalById,
+  syncGoal,
+  syncSavedGoal
+} from "../../utils/storage";
 import { useEffect, useRef, useState } from "react";
 import { globalStyles } from "../../constants/styles";
-import colors from "../../constants/colors";
 import RadioCircle from "../../components/RadioCircle";
-import ProgressSlider from "../../components/ProgressSlider";
 import { Confetti } from "react-native-fast-confetti";
+import Goal from "../../models/goal";
 
 export default function EditGoal() {
   const { id } = useLocalSearchParams();
@@ -21,7 +25,7 @@ export default function EditGoal() {
 
   useEffect(() => {
     const fetchGoals = async () => {
-      const loadedGoal = await getGoalById(id);
+      const loadedGoal = await getSavedGoalById(id);
       setGoal(loadedGoal);
     };
 
@@ -31,7 +35,6 @@ export default function EditGoal() {
   const [goalName, setGoalName] = useState("");
   const [goalDesc, setGoalDesc] = useState("");
   const [goalDifficulty, setGoalDifficulty] = useState(null);
-  const [goalProgress, setGoalProgress] = useState(null);
   const options = [
     { id: 1, name: "easy" },
     { id: 2, name: "medium" },
@@ -43,7 +46,6 @@ export default function EditGoal() {
       setGoalName(goal.name);
       setGoalDesc(goal.description);
       setGoalDifficulty(goal.difficulty);
-      setGoalProgress(goal.progress);
     }
   }, [goal]);
 
@@ -65,9 +67,8 @@ export default function EditGoal() {
       goal.name = goalName;
       goal.description = goalDesc;
       goal.difficulty = goalDifficulty;
-      goal.progress = goalProgress;
 
-      await syncGoal(goal);
+      await syncSavedGoal(goal);
       router.replace("/(tabs)/goals");
     } catch (e) {
       console.error("Failed to save goal:", e);
@@ -75,7 +76,15 @@ export default function EditGoal() {
   };
 
   const deleteGoal = async () => {
-    await removeGoalById(id);
+    await removeSavedGoalById(id);
+    router.replace("/(tabs)/goals");
+  };
+
+  const addBackGoal = async () => {
+    const saved = await getSavedGoalById(id);
+    const goal = new Goal(saved.name, saved.description, saved.difficulty);
+
+    await syncGoal(goal);
     router.replace("/(tabs)/goals");
   };
 
@@ -142,10 +151,17 @@ export default function EditGoal() {
       </View>
 
       <Pressable
-        style={[globalStyles.submitBtn, { marginBottom: 16 }]}
+        style={[globalStyles.submitBtn, { marginVertical: 16 }]}
         onPress={submitGoal}
       >
         <Text style={globalStyles.submitBtnText}>Change Goal</Text>
+      </Pressable>
+
+      <Pressable
+        style={[globalStyles.addBackBtn, { marginBottom: 16 }]}
+        onPress={addBackGoal}
+      >
+        <Text style={globalStyles.addBackBtnText}>Add to Daily Goals</Text>
       </Pressable>
 
       <Pressable style={globalStyles.deleteBtn} onPress={deleteGoal}>

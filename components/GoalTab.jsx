@@ -10,9 +10,10 @@ export default function GoalTab({ goal, editFolderName = "editGoal" }) {
   let goalColor = goalScale[goal.difficulty - 1];
 
   const showProgress = editFolderName !== "EditSavedGoal";
+  editFolderName = editFolderName || "editGoal";
 
   return (
-    <Link href={`/${editFolderName}/${goal.id}`}>
+    <Link href={`/${editFolderName}/${goal.id.toString()}`}>
       <View
         style={{
           borderColor: colors.secondaryAccent,

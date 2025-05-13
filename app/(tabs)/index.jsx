@@ -29,20 +29,27 @@ export default function HomeScreen() {
         loadCompletedGoals()
       ]);
 
+      const incompleteSort = incomplete.sort(
+        (a, b) => b.difficulty - a.difficulty
+      );
+      const completedSort = completed.sort(
+        (a, b) => b.difficulty - a.difficulty
+      );
+
       const incompleteMap = {};
-      incomplete.forEach((g) => {
+      incompleteSort.forEach((g) => {
         incompleteMap[g.id] = new Animated.Value(1);
       });
 
       const completedMap = {};
-      completed.forEach((g) => {
+      completedSort.forEach((g) => {
         completedMap[g.id] = new Animated.Value(1);
       });
 
       incompleteAnims.current = incompleteMap;
       completedAnims.current = completedMap;
-      setIncompleteGoals(incomplete);
-      setCompletedGoals(completed);
+      setIncompleteGoals(incompleteSort);
+      setCompletedGoals(completedSort);
     };
 
     fetchGoals();

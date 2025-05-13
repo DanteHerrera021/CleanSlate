@@ -16,28 +16,38 @@ export default function AllGoals() {
   useEffect(() => {
     const loadGoals = async () => {
       const data = await loadSavedGoals();
+      const sorted = data.sort((a, b) => b.difficulty - a.difficulty);
       const animatedMap = {};
-      data.forEach((g) => {
+      sorted.forEach((g) => {
         animatedMap[g.id] = new Animated.Value(1);
       });
       mapAnims.current = animatedMap;
-      setGoals(data);
+      setGoals(sorted);
     };
 
     loadGoals();
   }, [type]);
 
-  const handleSwipe = async (key, type) => {
-    const ref = mapAnims;
-    if (!animating.current && ref[key]) {
+  const handleSwipe = async (key) => {
+    const animMap = mapAnims.current;
+
+    if (!animating.current && animMap[key]) {
       animating.current = true;
-      Animated.timing(ref[key], {
+
+      Animated.timing(animMap[key], {
         toValue: 0,
         duration: 200,
         useNativeDriver: false
       }).start(async () => {
         await removeSavedGoalById(key);
-        const updated = loadSavedGoals;
+
+        const updated = await loadSavedGoals();
+        const newAnimMap = {};
+        updated.forEach((g) => {
+          newAnimMap[g.id] = new Animated.Value(1);
+        });
+
+        mapAnims.current = newAnimMap;
         setGoals(updated);
         animating.current = false;
       });

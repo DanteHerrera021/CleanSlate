@@ -4,6 +4,28 @@ import SavedGoal from "../models/savedGoal";
 
 const STORAGE_KEY = "goals";
 
+const removeDuplicates = (goalArray) => {
+    const uniqueById = new Map();
+    goalArray.forEach((goal) => {
+        if (!uniqueById.has(goal.id)) {
+            uniqueById.set(goal.id, goal);
+        }
+    });
+
+    const seenKey = new Set();
+    const finalList = [];
+    uniqueById.forEach((goal) => {
+        const key = `${goal.name}::${goal.description}`;
+        if (!seenKey.has(key)) {
+            seenKey.add(key);
+            finalList.push(goal);
+        }
+    });
+
+    return finalList;
+};
+
+
 const saveGoals = async (goalArray) => {
     try {
         const clean = goalArray
@@ -11,7 +33,9 @@ const saveGoals = async (goalArray) => {
             .map((goal) =>
                 goal.toJSON ? goal.toJSON() : Goal.fromJSON(goal).toJSON()
             );
-        await AsyncStorage.setItem('goals', JSON.stringify(clean));
+
+        const noDuplicates = removeDuplicates(clean)
+        await AsyncStorage.setItem('goals', JSON.stringify(noDuplicates));
     } catch (e) {
         console.error('Error saving goals:', e);
     }
@@ -22,9 +46,13 @@ export const loadGoals = async () => {
         const stored = await AsyncStorage.getItem(STORAGE_KEY);
         if (!stored) return [];
         const parsed = JSON.parse(stored);
+        const today = new Date().toDateString();
+
         return parsed
             .filter(Goal.isValid)
+            .filter((goal) => new Date(goal.dateAdded).toDateString() !== today)
             .map((g) => Goal.fromJSON(g));
+
 
     } catch (e) {
         console.error('Error loading goals:', e);
@@ -123,7 +151,9 @@ const saveSavedGoals = async (goalArray) => {
             .map((goal) =>
                 goal.toJSON ? goal.toJSON() : SavedGoal.fromJSON(goal).toJSON()
             );
-        await AsyncStorage.setItem('savedGoals', JSON.stringify(clean));
+
+        const noDuplicates = removeDuplicates(clean)
+        await AsyncStorage.setItem('savedGoals', JSON.stringify(noDuplicates));
     } catch (e) {
         console.error('Error saving goals:', e);
     }
@@ -158,5 +188,10 @@ export const syncSavedGoal = async (goal) => {
 export const removeSavedGoalById = async (goalId) => {
     const current = await loadSavedGoals();
     const updated = current.filter((goal) => goal.id !== goalId);
-    await saveGoals(updated);
+    await saveSavedGoals(updated);
+};
+
+export const getSavedGoalById = async (goalId) => {
+    const current = await loadSavedGoals();
+    return current.find((goal) => goal.id === goalId) || null;
 };
