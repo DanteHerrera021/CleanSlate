@@ -78,5 +78,15 @@ export const globalStyles = StyleSheet.create({
     },
     notLastItem: {
         marginBottom: 10
-    }
+    },
+
+    headerRow: {
+        paddingHorizontal: 16,
+        backgroundColor: colors.secondary,
+        paddingTop: 16,
+        paddingBottom: 8,
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center"
+    },
 })

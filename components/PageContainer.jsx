@@ -4,9 +4,11 @@ import { globalStyles } from "../constants/styles";
 import colors from "../constants/colors";
 import { Link } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { deletePrevGoals } from "../utils/storage.js";
 
 export default function PageContainer({ children, showHeader, padding }) {
   const insets = useSafeAreaInsets();
+  deletePrevGoals();
 
   return (
     <View style={{ flex: 1 }}>

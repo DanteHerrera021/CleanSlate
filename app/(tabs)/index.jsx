@@ -5,7 +5,9 @@ import PageContainer from "../../components/PageContainer";
 import colors from "../../constants/colors";
 import { globalStyles } from "../../constants/styles";
 import {
+  addTestDayStats,
   cleanBrokenGoals,
+  getRecords,
   loadCompletedGoals,
   loadIncompleteGoals,
   removeGoalById
@@ -19,7 +21,6 @@ export default function HomeScreen() {
   const incompleteAnims = useRef({});
   const completedAnims = useRef({});
   const animating = useRef(false);
-
   useEffect(() => {
     cleanBrokenGoals();
 
@@ -82,7 +83,7 @@ export default function HomeScreen() {
   return (
     <PageContainer>
       <View style={{ height: "50%" }}>
-        <View style={styles.headerRow}>
+        <View style={globalStyles.headerRow}>
           <Link style={styles.headerLeft} href={"/AllGoals/incomplete"}>
             <Text style={globalStyles.titleText}>Your Goals Today </Text>
             <Ionicons
@@ -130,15 +131,6 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  headerRow: {
-    paddingHorizontal: 16,
-    backgroundColor: colors.secondary,
-    paddingTop: 16,
-    paddingBottom: 8,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center"
-  },
   headerLeft: {
     flexDirection: "row",
     alignItems: "center"
@@ -149,11 +141,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingVertical: 8,
-    shadowColor: colors.secondary,
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.2,
-    shadowRadius: 10,
-    elevation: 20,
+    elevation: 2,
     backgroundColor: colors.secondary
   }
 });

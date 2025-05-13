@@ -1,8 +1,38 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Goal from "../models/goal";
 import SavedGoal from "../models/savedGoal";
+import DayStats from "../models/dayStats";
 
 const STORAGE_KEY = "goals";
+
+export const addTestDayStats = async () => {
+    await AsyncStorage.removeItem('dayStats');
+
+    const fakeGoal = new Goal("Test goal", "Manually added", 3,);
+    const fakeGoal2 = new Goal("Test goal2", "Manually added", 2);
+    const fakeGoal3 = new Goal("Test goal3", "Manually added", 1);
+    const fakeGoal4 = new Goal("Test goal4", "Manually added", 2);
+    fakeGoal.changeProgress(100);
+    fakeGoal2.changeProgress(100);
+    fakeGoal3.changeProgress(0);
+    fakeGoal4.changeProgress(20);
+
+    const today = new Date();
+
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+
+    const twoDaysAgo = new Date(today);
+    twoDaysAgo.setDate(today.getDate() - 2);
+
+    const fakeStats = new DayStats(yesterday, [fakeGoal, fakeGoal2, fakeGoal3, fakeGoal4]);
+    const fakeStats2 = new DayStats(twoDaysAgo, [fakeGoal, fakeGoal2, fakeGoal3]);
+
+    const existing = await getRecords();
+    existing.push(fakeStats, fakeStats2);
+
+    await AsyncStorage.setItem('dayStats', JSON.stringify(existing)); // Don't call .toJSON() here
+};
 
 const removeDuplicates = (goalArray) => {
     const uniqueById = new Map();
@@ -25,6 +55,55 @@ const removeDuplicates = (goalArray) => {
     return finalList;
 };
 
+export const deletePrevGoals = async () => {
+    const today = new Date().toDateString();
+    const goalArray = await loadGoals();
+    if (goalArray.length) {
+        const prevGoals = goalArray.filter((goal) => new Date(goal.dateAdded).toDateString() !== today);
+        await addToRecord(prevGoals);
+
+        const remainingGoals = goalArray.filter((goal) => new Date(goal.dateAdded).toDateString() === today);
+        await saveGoals(remainingGoals);
+    }
+};
+
+const addToRecord = async (goalArray) => {
+    try {
+        const groupedByDay = {};
+
+        goalArray.forEach(goal => {
+            const dayStr = new Date(goal.dateAdded).toDateString();
+            if (!groupedByDay[dayStr]) groupedByDay[dayStr] = [];
+            groupedByDay[dayStr].push(goal); // just collect goals by day
+        });
+
+        const existingRecords = await getRecords();
+
+        Object.entries(groupedByDay).forEach(([day, goals]) => {
+            existingRecords.push(new DayStats(day, goals));
+        });
+
+        const jsonData = JSON.stringify(existingRecords.map((r) => r.toJSON()));
+        await AsyncStorage.setItem('dayStats', jsonData);
+    } catch (e) {
+        console.error("Error saving goals to statistics:", e);
+    }
+};
+
+
+export const getRecords = async () => {
+    try {
+        const stored = await AsyncStorage.getItem('dayStats');
+        if (!stored) return [];
+        const parsed = JSON.parse(stored);
+        return parsed.map((entry) => DayStats.fromJSON(entry));
+    } catch (e) {
+        console.error('Error loading records:', e);
+        return [];
+    }
+};
+
+
 
 const saveGoals = async (goalArray) => {
     try {
@@ -46,10 +125,8 @@ export const loadGoals = async () => {
         const stored = await AsyncStorage.getItem(STORAGE_KEY);
         if (!stored) return [];
         const parsed = JSON.parse(stored);
-        const today = new Date().toDateString();
         return parsed
             .filter(Goal.isValid)
-            .filter((goal) => new Date(goal.dateAdded).toDateString() !== today)
             .map((g) => Goal.fromJSON(g));
     } catch (e) {
         console.error('Error loading goals:', e);
@@ -77,12 +154,6 @@ export const removeGoalById = async (goalId) => {
     await saveGoals(updated);
 };
 
-export const loadGoalById = async (goalId) => {
-    const goals = await loadGoals();
-    const goal = goals.filter((goal) => goal.id === goalId);
-    return goal[0]
-}
-
 export const syncGoal = async (goal) => {
     const current = await loadGoals();
     const index = current.findIndex((g) => g.id === goal.id);
@@ -101,13 +172,9 @@ export const getGoalById = async (goalId) => {
 
 export const loadIncompleteGoals = async () => {
     try {
-        const stored = await AsyncStorage.getItem('goals');
+        const stored = await loadGoals();
         if (!stored) return [];
-
-        const parsed = JSON.parse(stored);
-        const allGoals = parsed.map((g) => Goal.fromJSON(g));
-
-        return allGoals.filter((goal) => goal.progress < 100);
+        return stored.filter((goal) => goal.progress < 100);
     } catch (e) {
         console.error('Error loading incomplete goals:', e);
         return [];
@@ -116,13 +183,9 @@ export const loadIncompleteGoals = async () => {
 
 export const loadCompletedGoals = async () => {
     try {
-        const stored = await AsyncStorage.getItem('goals');
+        const stored = await loadGoals();
         if (!stored) return [];
-
-        const parsed = JSON.parse(stored);
-        const allGoals = parsed.map((g) => Goal.fromJSON(g));
-
-        return allGoals.filter((goal) => goal.progress == 100);
+        return stored.filter((goal) => goal.progress == 100);
     } catch (e) {
         console.error('Error loading incomplete goals:', e);
         return [];

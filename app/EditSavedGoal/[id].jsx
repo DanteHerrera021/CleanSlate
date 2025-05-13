@@ -13,7 +13,7 @@ import RadioCircle from "../../components/RadioCircle";
 import { Confetti } from "react-native-fast-confetti";
 import Goal from "../../models/goal";
 
-export default function EditGoal() {
+export default function EditSavedGoal() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
   const [hasTriggered, setHasTriggered] = useState(false);

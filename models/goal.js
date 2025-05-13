@@ -24,7 +24,13 @@ export default class Goal {
   }
 
   static fromJSON(data) {
-    const goal = new Goal(data.name, data.description, data.difficulty, data.id, new Date(data.dateAdded));
+    const goal = new Goal(
+      data.name,
+      data.description,
+      data.difficulty,
+      data.id,
+      new Date(data.dateAdded)
+    );
     goal.progress = data.progress ?? 0;
     return goal;
   }

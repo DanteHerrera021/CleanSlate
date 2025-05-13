@@ -55,8 +55,8 @@ export default function TabsLayout() {
             iconName = focused ? "home" : "home-outline";
           } else if (route.name === "goals") {
             iconName = focused ? "bookmark" : "bookmark-outline";
-          } else if (route.name === "account") {
-            iconName = focused ? "person" : "person-outline";
+          } else if (route.name === "achievements") {
+            iconName = focused ? "medal" : "medal-outline";
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -83,7 +83,7 @@ export default function TabsLayout() {
     >
       <Tabs.Screen name="goals" options={{ title: "Saved Goals" }} />
       <Tabs.Screen name="index" options={{ title: "Home" }} />
-      <Tabs.Screen name="account" options={{ title: "Account" }} />
+      <Tabs.Screen name="achievements" options={{ title: "Achievements" }} />
     </Tabs>
   );
 }
