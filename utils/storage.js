@@ -47,13 +47,10 @@ export const loadGoals = async () => {
         if (!stored) return [];
         const parsed = JSON.parse(stored);
         const today = new Date().toDateString();
-
         return parsed
             .filter(Goal.isValid)
             .filter((goal) => new Date(goal.dateAdded).toDateString() !== today)
             .map((g) => Goal.fromJSON(g));
-
-
     } catch (e) {
         console.error('Error loading goals:', e);
         return [];
