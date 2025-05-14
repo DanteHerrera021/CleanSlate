@@ -37,7 +37,7 @@ export default function PageContainer({ children, showHeader, padding }) {
                 }}
               ></Ionicons>
               <Image
-                source={require("../assets/CleanSlate TypefaceColor.png")}
+                source={require("../assets/CleanSlateWordmark.png")}
                 style={{
                   height: 40,
                   width: 200,

@@ -11,12 +11,14 @@ import { globalStyles } from "../../constants/styles";
 import { Link, useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import SwipeToDelete from "../../components/SwipeToDelete";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function AllGoals() {
   const { type } = useLocalSearchParams();
   const [goals, setGoals] = useState([]);
   const mapAnims = useRef({});
   const animating = useRef(false);
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     const loadGoals = async () => {
@@ -25,12 +27,14 @@ export default function AllGoals() {
           ? await loadCompletedGoals()
           : await loadIncompleteGoals();
 
+      const dataSorted = data.sort((a, b) => b.difficulty - a.difficulty);
+
       const animatedMap = {};
-      data.forEach((g) => {
+      dataSorted.forEach((g) => {
         animatedMap[g.id] = new Animated.Value(1);
       });
       mapAnims.current = animatedMap;
-      setGoals(data);
+      setGoals(dataSorted);
     };
 
     loadGoals();
@@ -53,7 +57,11 @@ export default function AllGoals() {
           type === "incomplete"
             ? await loadIncompleteGoals()
             : await loadCompletedGoals();
-        setList(updated);
+
+        const updatedSorted = updated.sort(
+          (a, b) => b.difficulty - a.difficulty
+        );
+        setGoals(updatedSorted);
         animating.current = false;
       });
     }
@@ -90,6 +98,7 @@ export default function AllGoals() {
         goals={goals}
         animatedValues={mapAnims.current}
         handleSwipe={handleSwipe}
+        style={{ paddingBottom: insets.bottom }}
       />
     </PageContainer>
   );

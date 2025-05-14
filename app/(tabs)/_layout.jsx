@@ -35,7 +35,7 @@ export default function TabsLayout() {
         headerTitle: () => (
           <Link href={"/"}>
             <Image
-              source={require("../../assets/CleanSlate TypefaceColor.png")}
+              source={require("../../assets/CleanSlateWordmark.png")}
               style={{
                 height: 40,
                 width: 200,

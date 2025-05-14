@@ -1,4 +1,4 @@
-import { Pressable, Text, View } from "react-native";
+import { Image, Pressable, Text, View } from "react-native";
 import PageContainer from "../../components/PageContainer";
 import { addTestDayStats, getRecords } from "../../utils/storage";
 import { useEffect, useState } from "react";
@@ -75,6 +75,7 @@ export default function AchievementsScreen() {
   useEffect(() => {
     (async () => {
       await addTestDayStats();
+      console.log("Added test stats");
       const results = await getRecords();
 
       // UPDATE COMPLETED VALUES
@@ -229,9 +230,25 @@ export default function AchievementsScreen() {
           </Text>
         </View>
       </View>
-      <Pressable onPress={test} style={globalStyles.deleteBtn}>
+      {/* <Pressable onPress={test} style={globalStyles.deleteBtn}>
         <Text style={globalStyles.deleteBtnText}>Test</Text>
-      </Pressable>
+      </Pressable> */}
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center"
+        }}
+      >
+        <Image
+          source={require("../../assets/CleanSlateLogo.png")}
+          style={{
+            opacity: 0.5,
+            aspectRatio: 1,
+            height: "90%"
+          }}
+        />
+      </View>
     </PageContainer>
   );
 }

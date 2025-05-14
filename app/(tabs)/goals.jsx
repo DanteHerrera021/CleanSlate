@@ -42,13 +42,16 @@ export default function AllGoals() {
         await removeSavedGoalById(key);
 
         const updated = await loadSavedGoals();
+        const updatedSorted = updated.sort(
+          (a, b) => b.difficulty - a.difficulty
+        );
         const newAnimMap = {};
-        updated.forEach((g) => {
+        updatedSorted.forEach((g) => {
           newAnimMap[g.id] = new Animated.Value(1);
         });
 
         mapAnims.current = newAnimMap;
-        setGoals(updated);
+        setGoals(updatedSorted);
         animating.current = false;
       });
     }

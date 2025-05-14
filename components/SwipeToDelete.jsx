@@ -62,7 +62,7 @@ export default function SwipeToDelete({
       contentContainerStyle={{
         paddingHorizontal: 16,
         paddingTop: 16,
-        paddingBottom: insets.bottom + 16
+        paddingBottom: 16
       }}
       useNativeDriver={false}
     />

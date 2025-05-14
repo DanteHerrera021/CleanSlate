@@ -75,14 +75,18 @@ export default function HomeScreen() {
           type === "incomplete"
             ? await loadIncompleteGoals()
             : await loadCompletedGoals();
-        setList(updated);
+
+        const updatedSorted = updated.sort(
+          (a, b) => b.difficulty - a.difficulty
+        );
+        setList(updatedSorted);
         animating.current = false;
       });
     }
   };
   return (
     <PageContainer>
-      <View style={{ height: "50%" }}>
+      <View style={{ flex: 1 }}>
         <View style={globalStyles.headerRow}>
           <Link style={styles.headerLeft} href={"/AllGoals/incomplete"}>
             <Text style={globalStyles.titleText}>Your Goals Today </Text>
@@ -106,7 +110,7 @@ export default function HomeScreen() {
         />
       </View>
 
-      <View style={{ height: "50%" }}>
+      <View style={{ flex: 1 }}>
         <View style={styles.completedHeader}>
           <Link style={styles.headerLeft} href={"/AllGoals/complete"}>
             <Text style={globalStyles.titleText}>Completed Goals </Text>
