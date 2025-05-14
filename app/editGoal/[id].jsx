@@ -222,7 +222,7 @@ export default function EditGoal() {
         style={[globalStyles.submitBtn, { marginBottom: 16 }]}
         onPress={submitGoal}
       >
-        <Text style={globalStyles.submitBtnText}>Change Goal</Text>
+        <Text style={globalStyles.submitBtnText}>Update Goal</Text>
       </Pressable>
 
       <Pressable
